@@ -10,7 +10,7 @@ export const partnerRouter = createTRPCRouter({
         email: z.string().email("Valid email is required"),
         phone: z.string().optional(),
         gender: z.string().optional(),
-        capitalContribution: z.number().min(0).max(100).default(0),
+        capitalAmount: z.number().min(0).default(0),
         companyId: z.string(),
         departmentIds: z.array(z.string()).default([]),
       })
@@ -19,7 +19,11 @@ export const partnerRouter = createTRPCRouter({
       const { departmentIds, ...partnerData } = input;
       
       const partner = await ctx.db.partner.create({
-        data: partnerData,
+        data: {
+          ...partnerData,
+          // keep deprecated field at 0 to avoid confusion
+          capitalContribution: 0,
+        },
       });
 
       // Create department associations if provided
@@ -86,7 +90,7 @@ export const partnerRouter = createTRPCRouter({
         email: z.string().email().optional(),
         phone: z.string().optional(),
         gender: z.string().optional(),
-        capitalContribution: z.number().min(0).max(100).optional(),
+        capitalAmount: z.number().min(0).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -167,16 +171,20 @@ export const partnerRouter = createTRPCRouter({
 
       if (!partner) return null;
 
-      // Calculate capital-based equity
-      const capitalEquity = (partner.capitalContribution / 100) * (partner.company.capitalWeight / 100);
+      // Calculate capital-based equity using amounts
+      const totalCompanyCapital = await ctx.db.partner.aggregate({
+        where: { companyId: partner.companyId },
+        _sum: { capitalAmount: true },
+      });
+      const totalAmount = totalCompanyCapital._sum.capitalAmount ?? 0;
+      const share = totalAmount > 0 ? (partner.capitalAmount ?? 0) / totalAmount : 0;
+      const capitalEquity = share * (partner.company.capitalWeight / 100);
 
       // Calculate effort-based equity
       let effortEquity = 0;
-      
       for (const partnerDept of partner.departments) {
         const dept = partnerDept.department;
         const totalTaskWeight = dept.tasks.reduce((sum, task) => sum + task.weight, 0);
-        
         if (totalTaskWeight > 0) {
           const equityPerPoint = (dept.weight / 100) / totalTaskWeight;
           const partnerTaskWeight = dept.tasks.reduce((sum, task) => sum + task.weight, 0);
@@ -213,30 +221,28 @@ export const partnerRouter = createTRPCRouter({
               },
             },
           },
+          company: {
+            select: { capitalWeight: true },
+          },
         },
       });
 
-      const company = await ctx.db.company.findUnique({
-        where: { id: input.companyId },
-        select: {
-          capitalWeight: true,
-          effortWeight: true,
-        },
+      const totalCompanyCapital = await ctx.db.partner.aggregate({
+        where: { companyId: input.companyId },
+        _sum: { capitalAmount: true },
       });
-
-      if (!company) return [];
+      const totalAmount = totalCompanyCapital._sum.capitalAmount ?? 0;
 
       return partners.map((partner) => {
-        // Calculate capital-based equity
-        const capitalEquity = (partner.capitalContribution / 100) * (company.capitalWeight / 100);
+        // Capital-based equity from amounts
+        const share = totalAmount > 0 ? (partner.capitalAmount ?? 0) / totalAmount : 0;
+        const capitalEquity = share * (partner.company.capitalWeight / 100);
 
-        // Calculate effort-based equity
+        // Effort-based equity
         let effortEquity = 0;
-        
         for (const partnerDept of partner.departments) {
           const dept = partnerDept.department;
           const totalTaskWeight = dept.tasks.reduce((sum, task) => sum + task.weight, 0);
-          
           if (totalTaskWeight > 0) {
             const equityPerPoint = (dept.weight / 100) / totalTaskWeight;
             const partnerTaskWeight = dept.tasks.reduce((sum, task) => sum + task.weight, 0);

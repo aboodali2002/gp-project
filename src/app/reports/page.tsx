@@ -21,10 +21,10 @@ export default function Reports() {
   ];
 
   const detailedData = [
-    { partner: "John Doe", department: "Engineering", capitalContribution: 30, effortEquity: 15, totalEquity: 35 },
-    { partner: "Jane Smith", department: "Marketing", capitalContribution: 20, effortEquity: 5, totalEquity: 25 },
-    { partner: "Mike Johnson", department: "Sales", capitalContribution: 0, effortEquity: 20, totalEquity: 20 },
-    { partner: "Sarah Wilson", department: "Operations", capitalContribution: 10, effortEquity: 10, totalEquity: 20 }
+    { partner: "John Doe", department: "Engineering", capitalAmount: 150, capitalPercent: 15, effortEquity: 15, totalEquity: 30 },
+    { partner: "Jane Smith", department: "Marketing", capitalAmount: 50, capitalPercent: 5, effortEquity: 5, totalEquity: 10 },
+    { partner: "Mike Johnson", department: "Sales", capitalAmount: 0, capitalPercent: 0, effortEquity: 20, totalEquity: 20 },
+    { partner: "Sarah Wilson", department: "Operations", capitalAmount: 0, capitalPercent: 0, effortEquity: 20, totalEquity: 20 }
   ];
 
   return (
@@ -178,6 +178,7 @@ export default function Reports() {
                 <tr>
                   <th className="px-6 py-4 text-left font-semibold">Partner</th>
                   <th className="px-6 py-4 text-left font-semibold">Department</th>
+                  <th className="px-6 py-4 text-right font-semibold">Capital ($)</th>
                   <th className="px-6 py-4 text-right font-semibold">Capital %</th>
                   <th className="px-6 py-4 text-right font-semibold">Effort %</th>
                   <th className="px-6 py-4 text-right font-semibold">Total %</th>
@@ -192,7 +193,8 @@ export default function Reports() {
                   }`}>
                     <td className="px-6 py-4 font-medium">{row.partner}</td>
                     <td className="px-6 py-4 text-gray-600 dark:text-gray-400">{row.department}</td>
-                    <td className="px-6 py-4 text-right">{row.capitalContribution}%</td>
+                    <td className="px-6 py-4 text-right">${row.capitalAmount?.toFixed?.(2) ?? "0.00"}</td>
+                    <td className="px-6 py-4 text-right">{row.capitalPercent}%</td>
                     <td className="px-6 py-4 text-right">{row.effortEquity}%</td>
                     <td className="px-6 py-4 text-right font-bold text-lg">{row.totalEquity}%</td>
                   </tr>
@@ -233,3 +235,4 @@ export default function Reports() {
     </div>
   );
 }
+

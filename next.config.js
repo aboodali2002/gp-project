@@ -3,8 +3,18 @@
  * for Docker builds.
  */
 import "./src/env.js";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const ROOT_DIR = dirname(fileURLToPath(import.meta.url));
+
+const config = {
+  experimental: {
+    turbopack: {
+      root: ROOT_DIR,
+    },
+  },
+};
 
 export default config;

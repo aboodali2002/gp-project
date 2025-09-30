@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface Task {
   id: string;
@@ -12,6 +13,7 @@ interface Task {
 }
 
 export default function TasksPage() {
+  const router = useRouter();
   const [tasks, setTasks] = useState<Task[]>([
     {
       id: "task-1",
@@ -322,17 +324,29 @@ export default function TasksPage() {
             </div>
           </div>
 
-          {/* Action Buttons */}
+          {/* Action Buttons */
+          }
           <div className="mt-8 flex justify-between">
-            <button className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors">
+            <button
+              onClick={() => alert('Draft saved successfully!')}
+              className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
+            >
               Save Draft
             </button>
             
             <div className="space-x-3">
-              <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">
+              <button
+                onClick={() => router.push('/company/equity-dashboard')}
+                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
+              >
                 Preview Equity
               </button>
-              <button 
+              <button
+                onClick={() => {
+                  if (tasks.length > 0) {
+                    router.push('/company/equity-dashboard');
+                  }
+                }} 
                 disabled={tasks.length === 0}
                 className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >

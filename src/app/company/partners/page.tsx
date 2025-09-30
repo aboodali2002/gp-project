@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 
 interface Partner {
@@ -9,28 +10,29 @@ interface Partner {
   email: string;
   phone?: string;
   gender?: string;
-  capitalContribution: number;
+  capitalAmount: number;
   departments: string[];
 }
 
 export default function PartnersPage() {
+  const router = useRouter();
   const [partners, setPartners] = useState<Partner[]>([
     {
       id: "partner-1",
-      name: "John Doe",
-      email: "john@example.com",
+      name: "Ahmed Khaled",
+      email: "ahmed@example.com",
       phone: "+1-555-0123",
       gender: "Male",
-      capitalContribution: 30,
+      capitalAmount: 100000,
       departments: ["Engineering", "Product"]
     },
     {
       id: "partner-2", 
-      name: "Jane Smith",
-      email: "jane@example.com",
+      name: "Salma Ali",
+      email: "salma@example.com",
       phone: "+1-555-0124",
       gender: "Female",
-      capitalContribution: 20,
+      capitalAmount: 50000,
       departments: ["Marketing", "Sales"]
     }
   ]);
@@ -42,7 +44,7 @@ export default function PartnersPage() {
     email: "",
     phone: "",
     gender: "",
-    capitalContribution: 0,
+    capitalAmount: 0,
     departments: [] as string[]
   });
 
@@ -60,7 +62,7 @@ export default function PartnersPage() {
         email: "",
         phone: "",
         gender: "",
-        capitalContribution: 0,
+        capitalAmount: 0,
         departments: []
       });
       setShowAddForm(false);
@@ -90,7 +92,7 @@ export default function PartnersPage() {
     }));
   };
 
-  const totalCapitalContribution = partners.reduce((sum, partner) => sum + partner.capitalContribution, 0);
+  const totalCapitalAmount = partners.reduce((sum, partner) => sum + partner.capitalAmount, 0);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -108,18 +110,16 @@ export default function PartnersPage() {
               <div className="text-sm text-gray-600">Total Partners</div>
             </div>
             <div className="bg-white rounded-lg shadow-sm border p-4">
-              <div className="text-2xl font-bold text-green-600">{totalCapitalContribution.toFixed(1)}%</div>
-              <div className="text-sm text-gray-600">Capital Allocated</div>
+              <div className="text-2xl font-bold text-green-600">${totalCapitalAmount.toFixed(2)}</div>
+              <div className="text-sm text-gray-600">Total Capital Committed</div>
             </div>
             <div className="bg-white rounded-lg shadow-sm border p-4">
               <div className="text-2xl font-bold text-purple-600">{availableDepartments.length}</div>
               <div className="text-sm text-gray-600">Departments</div>
             </div>
             <div className="bg-white rounded-lg shadow-sm border p-4">
-              <div className={`text-2xl font-bold ${totalCapitalContribution <= 100 ? 'text-green-600' : 'text-red-600'}`}>
-                {totalCapitalContribution <= 100 ? '✓' : '⚠'}
-              </div>
-              <div className="text-sm text-gray-600">Capital Valid</div>
+              <div className="text-2xl font-bold text-blue-600">{partners.length > 0 && totalCapitalAmount > 0 ? '✓' : '⚠'}</div>
+              <div className="text-sm text-gray-600">Capital Pool Ready</div>
             </div>
           </div>
 
@@ -196,17 +196,16 @@ export default function PartnersPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Capital Contribution (%)
+                    Capital Amount ($)
                   </label>
                   <input
                     type="number"
                     min="0"
-                    max="100"
-                    step="0.1"
-                    value={newPartner.capitalContribution}
-                    onChange={(e) => setNewPartner({...newPartner, capitalContribution: parseFloat(e.target.value) || 0})}
+                    step="0.01"
+                    value={newPartner.capitalAmount}
+                    onChange={(e) => setNewPartner({...newPartner, capitalAmount: parseFloat(e.target.value) || 0})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="0"
+                    placeholder="0.00"
                   />
                 </div>
 
@@ -281,19 +280,18 @@ export default function PartnersPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Capital Contribution
+                      Capital Amount ($)
                     </label>
                     <div className="flex items-center space-x-2">
                       <input
                         type="number"
                         min="0"
-                        max="100"
-                        step="0.1"
-                        value={partner.capitalContribution}
-                        onChange={(e) => updatePartner(partner.id, {capitalContribution: parseFloat(e.target.value) || 0})}
+                        step="0.01"
+                        value={partner.capitalAmount}
+                        onChange={(e) => updatePartner(partner.id, {capitalAmount: parseFloat(e.target.value) || 0})}
                         className="w-24 px-2 py-1 border border-gray-300 rounded text-sm"
                       />
-                      <span className="text-sm text-gray-600">%</span>
+                      <span className="text-sm text-gray-600">USD</span>
                     </div>
                   </div>
 
@@ -333,43 +331,42 @@ export default function PartnersPage() {
             ))}
           </div>
 
-          {/* Validation Messages */}
-          {totalCapitalContribution > 100 && (
-            <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
-              <div className="font-medium text-red-800">
-                ⚠ Capital contributions exceed 100%
+          {/* Capital Pool Overview */}
+          {partners.length > 0 && (
+            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
+              <div className="font-medium text-blue-800">
+                Capital Pool Overview
               </div>
-              <div className="text-sm text-red-700 mt-1">
-                Total capital contributions: {totalCapitalContribution.toFixed(1)}%. 
-                Please reduce individual contributions to stay within 100%.
-              </div>
-            </div>
-          )}
-
-          {totalCapitalContribution <= 100 && partners.length > 0 && (
-            <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
-              <div className="font-medium text-green-800">
-                ✓ Capital contributions are within limits
-              </div>
-              <div className="text-sm text-green-700 mt-1">
-                Total capital allocated: {totalCapitalContribution.toFixed(1)}% 
-                ({(100 - totalCapitalContribution).toFixed(1)}% remaining)
+              <div className="text-sm text-blue-700 mt-1">
+                Total committed: ${totalCapitalAmount.toFixed(2)}
               </div>
             </div>
           )}
 
-          {/* Action Buttons */}
+          {/* Action Buttons */
+          }
           <div className="mt-8 flex justify-between">
-            <button className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors">
+            <button
+              onClick={() => alert('Draft saved successfully!')}
+              className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
+            >
               Save Draft
             </button>
             
             <div className="space-x-3">
-              <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">
+              <button
+                onClick={() => router.push('/dashboard#tasks')}
+                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
+              >
                 Add Tasks
               </button>
-              <button 
-                disabled={partners.length === 0 || totalCapitalContribution > 100}
+              <button
+                onClick={() => {
+                  if (partners.length > 0 && totalCapitalAmount > 0) {
+                    router.push('/company/equity-dashboard');
+                  }
+                }} 
+                disabled={partners.length === 0 || totalCapitalAmount <= 0}
                 className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Calculate Equity

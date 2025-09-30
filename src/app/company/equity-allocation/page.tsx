@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
 
 export default function EquityAllocation() {
+  const router = useRouter();
   const [departments, setDepartments] = useState<Array<{
     id: string;
     name: string;
@@ -247,15 +249,33 @@ export default function EquityAllocation() {
 
             {/* Action Buttons */}
             <div className="mt-6 flex justify-between">
-              <button className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors">
+              <button 
+                onClick={() => {
+                  // TODO: Implement save draft functionality
+                  alert('Draft saved successfully!');
+                }}
+                className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
+              >
                 Save Draft
               </button>
               
               <div className="space-x-3">
-                <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                <button 
+                  onClick={() => {
+                    router.push('/company/partners');
+                  }}
+                  className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                >
                   Add Partners
                 </button>
                 <button 
+                  onClick={() => {
+                    if (isWeightValid && departments.length > 0) {
+                      // TODO: Implement confirm allocation functionality
+                      alert('Allocation confirmed! Redirecting to dashboard...');
+                      router.push('/company/equity-dashboard');
+                    }
+                  }}
                   disabled={!isWeightValid || departments.length === 0}
                   className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >

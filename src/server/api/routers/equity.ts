@@ -53,9 +53,11 @@ export const equityRouter = createTRPCRouter({
       });
 
       // Calculate partner equity breakdown
+      const totalCompanyCapital = company.partners.reduce((sum, p) => sum + (p as any).capitalAmount || 0, 0);
       const partnerBreakdown = company.partners.map((partner) => {
-        // Capital-based equity
-        const capitalEquity = (partner.capitalContribution / 100) * (company.capitalWeight / 100);
+        // Capital-based equity from amounts
+        const share = totalCompanyCapital > 0 ? (((partner as any).capitalAmount || 0) / totalCompanyCapital) : 0;
+        const capitalEquity = share * (company.capitalWeight / 100);
 
         // Effort-based equity
         let effortEquity = 0;
@@ -88,7 +90,7 @@ export const equityRouter = createTRPCRouter({
           id: partner.id,
           name: partner.name,
           email: partner.email,
-          capitalContribution: partner.capitalContribution,
+          capitalAmount: (partner as any).capitalAmount ?? 0,
           capitalEquity,
           effortEquity,
           totalEquity,
@@ -103,8 +105,8 @@ export const equityRouter = createTRPCRouter({
       const totalDepartmentWeight = company.departments.reduce((sum, dept) => sum + dept.weight, 0);
       const isDepartmentWeightValid = Math.abs(totalDepartmentWeight - company.effortWeight) < 0.01;
       
-      const totalPartnerCapital = company.partners.reduce((sum, partner) => sum + partner.capitalContribution, 0);
-      const isCapitalValid = totalPartnerCapital <= 100;
+      const totalPartnerCapital = totalCompanyCapital;
+      const isCapitalValid = totalPartnerCapital > 0;
 
       return {
         company,
@@ -117,7 +119,7 @@ export const equityRouter = createTRPCRouter({
           departmentWeightDifference: totalDepartmentWeight - company.effortWeight,
           isCapitalValid,
           totalPartnerCapital,
-          capitalExcess: Math.max(0, totalPartnerCapital - 100),
+          capitalExcess: 0,
         },
         summary: {
           totalDepartments: company.departments.length,

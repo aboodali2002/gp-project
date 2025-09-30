@@ -73,7 +73,8 @@ model Partner {
     email       String
     phone       String?
     gender      String?
-    capitalContribution Float @default(0.0) // Capital contribution percentage
+    capitalContribution Float @default(0.0) // DEPRECATED: percent; kept for backward compatibility
+    capitalAmount       Float @default(0.0) // Capital amount in currency units
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 

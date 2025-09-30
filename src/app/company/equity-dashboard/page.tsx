@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface Partner {
   id: string;
@@ -28,10 +29,14 @@ interface Department {
 }
 
 export default function EquityDashboard() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"overview" | "partners" | "departments" | "vesting">("overview");
 
-  // Mock data - in a real app, this would come from the API
-  const partners: Partner[] = [
+  // Load state from localStorage if present; fallback to mock data
+  const saved = typeof window !== 'undefined' ? localStorage.getItem("cq_state") : null;
+  const parsed = saved ? (() => { try { return JSON.parse(saved); } catch { return null; } })() : null;
+
+  const partners: Partner[] = parsed?.partners ?? [
     {
       id: "partner-1",
       name: "John Doe",
@@ -64,7 +69,7 @@ export default function EquityDashboard() {
     }
   ];
 
-  const departments: Department[] = [
+  const rawDepartments: any[] = parsed?.departments ?? [
     {
       id: "dept-1",
       name: "Engineering",
@@ -100,9 +105,41 @@ export default function EquityDashboard() {
     }
   ];
 
-  const totalCapitalEquity = partners.reduce((sum, p) => sum + p.capitalEquity, 0);
-  const totalEffortEquity = partners.reduce((sum, p) => sum + p.effortEquity, 0);
-  const totalEquity = partners.reduce((sum, p) => sum + p.totalEquity, 0);
+  const departments: Department[] = rawDepartments.map((d: any) => {
+    const tasks = Array.isArray(d?.tasks) ? d.tasks : [];
+    const computedTotal = tasks.reduce((sum: number, t: any) => sum + (t?.weight ?? 0), 0);
+    const totalTaskWeight = typeof d?.totalTaskWeight === 'number' ? d.totalTaskWeight : computedTotal;
+    const weight = typeof d?.weight === 'number' ? d.weight : 0;
+    const equityPerPoint = typeof d?.equityPerPoint === 'number'
+      ? d.equityPerPoint
+      : (totalTaskWeight > 0 ? weight / totalTaskWeight : 0);
+    return {
+      id: String(d?.id ?? ''),
+      name: String(d?.name ?? ''),
+      weight,
+      totalTaskWeight,
+      equityPerPoint,
+      tasks,
+    } as Department;
+  });
+
+  // Compute capital equity dynamically if partners contain capitalAmount
+  const savedCompany = parsed?.companyData;
+  const capitalWeight = typeof savedCompany?.capitalWeight === 'number' ? savedCompany.capitalWeight : 20;
+  const totalCapitalAmount = partners.reduce((sum, p: any) => sum + (p.capitalAmount || 0), 0);
+  const partnersWithComputedCapital = partners.map((p: any) => {
+    const share = totalCapitalAmount > 0 ? (p.capitalAmount || 0) / totalCapitalAmount : 0;
+    const computedCapitalEquity = share * capitalWeight;
+    return {
+      ...p,
+      capitalEquity: typeof p.capitalEquity === 'number' ? p.capitalEquity : computedCapitalEquity,
+      totalEquity: typeof p.totalEquity === 'number' ? p.totalEquity : computedCapitalEquity + (p.effortEquity || 0)
+    } as Partner;
+  });
+
+  const totalCapitalEquity = partnersWithComputedCapital.reduce((sum, p) => sum + p.capitalEquity, 0);
+  const totalEffortEquity = partnersWithComputedCapital.reduce((sum, p) => sum + (p.effortEquity || 0), 0);
+  const totalEquity = partnersWithComputedCapital.reduce((sum, p) => sum + p.totalEquity, 0);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -166,7 +203,7 @@ export default function EquityDashboard() {
                     <div>
                       <h3 className="text-lg font-semibold mb-4">Equity Distribution</h3>
                       <div className="space-y-3">
-                        {partners.map((partner) => (
+                        {partnersWithComputedCapital.map((partner) => (
                           <div key={partner.id} className="flex items-center justify-between">
                             <div>
                               <div className="font-medium">{partner.name}</div>
@@ -176,7 +213,7 @@ export default function EquityDashboard() {
                               <div className="text-lg font-semibold">{partner.totalEquity.toFixed(1)}%</div>
                               <div className="text-xs text-gray-500">
                                 Capital: {partner.capitalEquity.toFixed(1)}% | 
-                                Effort: {partner.effortEquity.toFixed(1)}%
+                                Effort: {(partner.effortEquity || 0).toFixed(1)}%
                               </div>
                             </div>
                           </div>
@@ -229,7 +266,7 @@ export default function EquityDashboard() {
 
               {activeTab === "partners" && (
                 <div className="space-y-4">
-                  {partners.map((partner) => (
+                {partnersWithComputedCapital.map((partner) => (
                     <div key={partner.id} className="border border-gray-200 rounded-lg p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div>
@@ -247,8 +284,8 @@ export default function EquityDashboard() {
                           <h4 className="font-medium mb-2">Capital Contribution</h4>
                           <div className="space-y-2">
                             <div className="flex justify-between">
-                              <span>Contribution:</span>
-                              <span>{partner.capitalContribution}%</span>
+                            <span>Capital Amount:</span>
+                            <span>${(partner as any).capitalAmount?.toFixed?.(2) ?? "0.00"}</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Capital Equity:</span>
@@ -266,7 +303,7 @@ export default function EquityDashboard() {
                             </div>
                             <div className="flex justify-between">
                               <span>Effort Equity:</span>
-                              <span>{partner.effortEquity.toFixed(1)}%</span>
+                            <span>{(partner.effortEquity || 0).toFixed(1)}%</span>
                             </div>
                           </div>
                         </div>
@@ -361,16 +398,33 @@ export default function EquityDashboard() {
           {/* Action Buttons */}
           <div className="flex justify-between">
             <div className="space-x-3">
-              <button className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors">
+              <button 
+                onClick={() => {
+                  // TODO: Implement PDF export functionality
+                  alert('PDF export functionality will be implemented');
+                }}
+                className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
+              >
                 Export PDF
               </button>
-              <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => {
+                  router.push('/company/equity-allocation');
+                }}
+                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
+              >
                 Edit Allocation
               </button>
             </div>
             
             <div className="space-x-3">
-              <button className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => {
+                  // TODO: Implement save and finalize functionality
+                  alert('Allocation saved and finalized!');
+                }}
+                className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors"
+              >
                 Save & Finalize
               </button>
             </div>
