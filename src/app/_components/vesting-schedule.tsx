@@ -25,6 +25,17 @@ interface PartnerVestingData {
   vestingMethod: string;
   totalShares: number;
   partnerShares: number;
+  capitalEquity: number;
+  effortEquity: number;
+  totalEquity: number;
+  effortBreakdown: Array<{
+    departmentName: string;
+    departmentWeight: number;
+    taskCount: number;
+    totalTaskWeight: number;
+    effortContribution: number;
+    effortPercentage: number;
+  }>;
   schedule: VestingEntry[];
 }
 
@@ -33,14 +44,35 @@ const mockVestingData: PartnerVestingData[] = [
   {
     partner: {
       id: "1",
-      name: "John Doe",
-      email: "john@example.com"
+      name: "Mohammed Alojayan",
+      email: "mohammed.alojayan@example.com"
     },
     vestingPeriod: 48,
     vestingStartDate: "2024-01-01",
     vestingMethod: "MONTHLY",
     totalShares: 1000000,
     partnerShares: 350000,
+    capitalEquity: 0.15, // 15% from capital contribution
+    effortEquity: 0.20, // 20% from effort/tasks
+    totalEquity: 0.35, // 35% total equity
+    effortBreakdown: [
+      {
+        departmentName: "Engineering",
+        departmentWeight: 40,
+        taskCount: 3,
+        totalTaskWeight: 8,
+        effortContribution: 0.12,
+        effortPercentage: 12
+      },
+      {
+        departmentName: "Product",
+        departmentWeight: 20,
+        taskCount: 2,
+        totalTaskWeight: 4,
+        effortContribution: 0.08,
+        effortPercentage: 8
+      }
+    ],
     schedule: [
       { date: "2024-01-01", month: 0, vestingPercentage: 0, shares: 0, cumulativeShares: 0 },
       { date: "2024-02-01", month: 1, vestingPercentage: 2.08, shares: 7292, cumulativeShares: 7292 },
@@ -55,14 +87,35 @@ const mockVestingData: PartnerVestingData[] = [
   {
     partner: {
       id: "2",
-      name: "Jane Smith",
-      email: "jane@example.com"
+      name: "Ali Bohulaiqa",
+      email: "ali.bohulaiqa@example.com"
     },
     vestingPeriod: 48,
     vestingStartDate: "2024-01-01",
     vestingMethod: "QUARTERLY",
     totalShares: 1000000,
     partnerShares: 250000,
+    capitalEquity: 0.10, // 10% from capital contribution
+    effortEquity: 0.15, // 15% from effort/tasks
+    totalEquity: 0.25, // 25% total equity
+    effortBreakdown: [
+      {
+        departmentName: "Marketing",
+        departmentWeight: 30,
+        taskCount: 2,
+        totalTaskWeight: 3,
+        effortContribution: 0.09,
+        effortPercentage: 9
+      },
+      {
+        departmentName: "Sales",
+        departmentWeight: 10,
+        taskCount: 1,
+        totalTaskWeight: 2,
+        effortContribution: 0.06,
+        effortPercentage: 6
+      }
+    ],
     schedule: [
       { date: "2024-01-01", month: 0, vestingPercentage: 0, shares: 0, cumulativeShares: 0 },
       { date: "2024-04-01", month: 3, vestingPercentage: 6.25, shares: 15625, cumulativeShares: 15625 },
@@ -77,14 +130,35 @@ const mockVestingData: PartnerVestingData[] = [
   {
     partner: {
       id: "3",
-      name: "Mike Johnson",
-      email: "mike@example.com"
+      name: "Abdullah Alsaeed",
+      email: "abdullah.alsaeed@example.com"
     },
     vestingPeriod: 48,
     vestingStartDate: "2024-01-01",
     vestingMethod: "ANNUAL",
     totalShares: 1000000,
     partnerShares: 200000,
+    capitalEquity: 0.08, // 8% from capital contribution
+    effortEquity: 0.12, // 12% from effort/tasks
+    totalEquity: 0.20, // 20% total equity
+    effortBreakdown: [
+      {
+        departmentName: "Operations",
+        departmentWeight: 15,
+        taskCount: 1,
+        totalTaskWeight: 2,
+        effortContribution: 0.06,
+        effortPercentage: 6
+      },
+      {
+        departmentName: "Finance",
+        departmentWeight: 10,
+        taskCount: 1,
+        totalTaskWeight: 1,
+        effortContribution: 0.06,
+        effortPercentage: 6
+      }
+    ],
     schedule: [
       { date: "2024-01-01", month: 0, vestingPercentage: 0, shares: 0, cumulativeShares: 0 },
       { date: "2025-01-01", month: 12, vestingPercentage: 25, shares: 50000, cumulativeShares: 50000 },
@@ -96,14 +170,35 @@ const mockVestingData: PartnerVestingData[] = [
   {
     partner: {
       id: "4",
-      name: "Sarah Wilson",
-      email: "sarah@example.com"
+      name: "Mohammed Dhabab",
+      email: "mohammed.dhabab@example.com"
     },
     vestingPeriod: 48,
     vestingStartDate: "2024-01-01",
     vestingMethod: "MONTHLY",
     totalShares: 1000000,
     partnerShares: 200000,
+    capitalEquity: 0.05, // 5% from capital contribution
+    effortEquity: 0.15, // 15% from effort/tasks
+    totalEquity: 0.20, // 20% total equity
+    effortBreakdown: [
+      {
+        departmentName: "Product",
+        departmentWeight: 20,
+        taskCount: 2,
+        totalTaskWeight: 5,
+        effortContribution: 0.10,
+        effortPercentage: 10
+      },
+      {
+        departmentName: "Engineering",
+        departmentWeight: 40,
+        taskCount: 1,
+        totalTaskWeight: 3,
+        effortContribution: 0.05,
+        effortPercentage: 5
+      }
+    ],
     schedule: [
       { date: "2024-01-01", month: 0, vestingPercentage: 0, shares: 0, cumulativeShares: 0 },
       { date: "2024-02-01", month: 1, vestingPercentage: 2.08, shares: 4167, cumulativeShares: 4167 },
@@ -219,6 +314,59 @@ export default function VestingSchedule({ isDark }: VestingScheduleProps) {
                 <div className="font-semibold">{currentPartner.vestingMethod}</div>
               </div>
             </div>
+          </div>
+
+          {/* Equity Breakdown */}
+          <div className={`p-4 rounded-lg ${
+            isDark ? 'bg-gray-700' : 'bg-gray-50'
+          }`}>
+            <h3 className="text-lg font-semibold mb-4">Equity Breakdown</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600">
+                  {(currentPartner.capitalEquity * 100).toFixed(1)}%
+                </div>
+                <div className="text-sm text-gray-600">Capital Equity</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">
+                  {(currentPartner.effortEquity * 100).toFixed(1)}%
+                </div>
+                <div className="text-sm text-gray-600">Effort Equity</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">
+                  {(currentPartner.totalEquity * 100).toFixed(1)}%
+                </div>
+                <div className="text-sm text-gray-600">Total Equity</div>
+              </div>
+            </div>
+
+            {/* Effort Breakdown by Department */}
+            {currentPartner.effortBreakdown.length > 0 && (
+              <div className="mt-4">
+                <h4 className="text-md font-semibold mb-2">Effort Breakdown by Department</h4>
+                <div className="space-y-2">
+                  {currentPartner.effortBreakdown.map((dept, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-white dark:bg-gray-800 rounded">
+                      <div className="flex-1">
+                        <div className="font-medium text-sm">{dept.departmentName}</div>
+                        <div className="text-xs text-gray-600">
+                          {dept.taskCount} tasks, {dept.totalTaskWeight} weight, 
+                          Dept Weight: {dept.departmentWeight}%
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-semibold text-sm">
+                          {dept.effortPercentage.toFixed(1)}%
+                        </div>
+                        <div className="text-xs text-gray-600">effort</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Vesting Schedule */}

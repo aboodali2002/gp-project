@@ -355,10 +355,16 @@ export default function PartnersPage() {
             
             <div className="space-x-3">
               <button
-                onClick={() => router.push('/dashboard#tasks')}
+                onClick={() => router.push('/company/tasks')}
                 className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
               >
                 Add Tasks
+              </button>
+              <button
+                onClick={() => router.push('/company/task-assignment')}
+                className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition-colors"
+              >
+                Assign Tasks to Partners
               </button>
               <button
                 onClick={() => {

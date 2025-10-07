@@ -15,17 +15,56 @@ export default function Reports() {
   ];
 
   const partnerEquityData = [
-    { name: "John Doe", equity: 35, color: "#3B82F6" },
-    { name: "Jane Smith", equity: 25, color: "#10B981" },
-    { name: "Mike Johnson", equity: 20, color: "#F59E0B" },
-    { name: "Sarah Wilson", equity: 20, color: "#EF4444" }
+    { name: "Mohammed Alojayan", equity: 35, color: "#3B82F6" },
+    { name: "Ali Bohulaiqa", equity: 25, color: "#10B981" },
+    { name: "Abdullah Alsaeed", equity: 20, color: "#F59E0B" },
+    { name: "Mohammed Dhabab", equity: 20, color: "#EF4444" }
   ];
 
   const detailedData = [
-    { partner: "John Doe", department: "Engineering", capitalAmount: 150, capitalPercent: 15, effortEquity: 15, totalEquity: 30 },
-    { partner: "Jane Smith", department: "Marketing", capitalAmount: 50, capitalPercent: 5, effortEquity: 5, totalEquity: 10 },
-    { partner: "Mike Johnson", department: "Sales", capitalAmount: 0, capitalPercent: 0, effortEquity: 20, totalEquity: 20 },
-    { partner: "Sarah Wilson", department: "Operations", capitalAmount: 0, capitalPercent: 0, effortEquity: 20, totalEquity: 20 }
+    { partner: "Mohammed Alojayan", department: "Engineering", capitalAmount: 150, capitalPercent: 15, effortEquity: 15, totalEquity: 30 },
+    { partner: "Ali Bohulaiqa", department: "Marketing", capitalAmount: 50, capitalPercent: 5, effortEquity: 5, totalEquity: 10 },
+    { partner: "Abdullah Alsaeed", department: "Sales", capitalAmount: 0, capitalPercent: 0, effortEquity: 20, totalEquity: 20 },
+    { partner: "Mohammed Dhabab", department: "Operations", capitalAmount: 0, capitalPercent: 0, effortEquity: 20, totalEquity: 20 }
+  ];
+
+  // Mock data for partner tasks
+  const partnerTasks = [
+    {
+      partner: "Mohammed Alojayan",
+      department: "Engineering",
+      tasks: [
+        { name: "Develop API", importance: "HIGH", weight: 3 },
+        { name: "Database Design", importance: "MEDIUM", weight: 2 },
+        { name: "Code Review", importance: "LOW", weight: 1 }
+      ]
+    },
+    {
+      partner: "Ali Bohulaiqa",
+      department: "Marketing",
+      tasks: [
+        { name: "Market Research", importance: "HIGH", weight: 3 },
+        { name: "Brand Strategy", importance: "MEDIUM", weight: 2 },
+        { name: "Social Media", importance: "LOW", weight: 1 }
+      ]
+    },
+    {
+      partner: "Abdullah Alsaeed",
+      department: "Sales",
+      tasks: [
+        { name: "Lead Generation", importance: "HIGH", weight: 3 },
+        { name: "Client Outreach", importance: "MEDIUM", weight: 2 }
+      ]
+    },
+    {
+      partner: "Mohammed Dhabab",
+      department: "Operations",
+      tasks: [
+        { name: "Process Documentation", importance: "MEDIUM", weight: 2 },
+        { name: "Team Coordination", importance: "HIGH", weight: 3 },
+        { name: "Resource Planning", importance: "LOW", weight: 1 }
+      ]
+    }
   ];
 
   return (
@@ -113,56 +152,128 @@ export default function Reports() {
             
             {/* Simple Pie Chart Visualization */}
             <div className="mt-6 relative w-48 h-48 mx-auto">
-              <div className="absolute inset-0 rounded-full border-8 border-gray-200 dark:border-gray-700"></div>
-              <div 
-                className="absolute inset-0 rounded-full border-8 border-blue-600"
-                style={{ 
-                  clipPath: `polygon(50% 50%, 50% 0%, ${50 + 35 * Math.cos(0)}% ${50 + 35 * Math.sin(0)}%)` 
-                }}
-              ></div>
-              <div 
-                className="absolute inset-0 rounded-full border-8 border-green-600"
-                style={{ 
-                  clipPath: `polygon(50% 50%, 50% 0%, ${50 + 35 * Math.cos(Math.PI * 0.7)}% ${50 + 35 * Math.sin(Math.PI * 0.7)}%)` 
-                }}
-              ></div>
-              <div 
-                className="absolute inset-0 rounded-full border-8 border-yellow-600"
-                style={{ 
-                  clipPath: `polygon(50% 50%, 50% 0%, ${50 + 35 * Math.cos(Math.PI * 0.9)}% ${50 + 35 * Math.sin(Math.PI * 0.9)}%)` 
-                }}
-              ></div>
-              <div 
-                className="absolute inset-0 rounded-full border-8 border-red-600"
-                style={{ 
-                  clipPath: `polygon(50% 50%, 50% 0%, ${50 + 35 * Math.cos(Math.PI * 1.1)}% ${50 + 35 * Math.sin(Math.PI * 1.1)}%)` 
-                }}
-              ></div>
+              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                {/* Background circle */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="8"
+                  className="text-gray-200 dark:text-gray-700"
+                />
+                
+                {/* John Doe - 35% */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke="#3B82F6"
+                  strokeWidth="8"
+                  strokeDasharray={`${35 * 2.51} 251`}
+                  strokeDashoffset="0"
+                  className="transition-all duration-500"
+                />
+                
+                {/* Jane Smith - 25% */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke="#10B981"
+                  strokeWidth="8"
+                  strokeDasharray={`${25 * 2.51} 251`}
+                  strokeDashoffset={`-${35 * 2.51}`}
+                  className="transition-all duration-500"
+                />
+                
+                {/* Mike Johnson - 20% */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke="#F59E0B"
+                  strokeWidth="8"
+                  strokeDasharray={`${20 * 2.51} 251`}
+                  strokeDashoffset={`-${(35 + 25) * 2.51}`}
+                  className="transition-all duration-500"
+                />
+                
+                {/* Sarah Wilson - 20% */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke="#EF4444"
+                  strokeWidth="8"
+                  strokeDasharray={`${20 * 2.51} 251`}
+                  strokeDashoffset={`-${(35 + 25 + 20) * 2.51}`}
+                  className="transition-all duration-500"
+                />
+              </svg>
             </div>
+          </div>
+        </div>
+
+        {/* Partner Tasks Section */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold mb-6">Partner Tasks & Assignments</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {partnerTasks.map((partner, index) => (
+              <div key={partner.partner} className={`rounded-2xl border-2 p-6 ${
+                isDark 
+                  ? 'bg-gray-800 border-gray-700' 
+                  : 'bg-white border-gray-200'
+              }`}>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-xl font-bold">{partner.partner}</h3>
+                    <p className="text-sm text-gray-500">{partner.department}</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-blue-600">{partner.tasks.length}</div>
+                    <div className="text-xs text-gray-500">Total Tasks</div>
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  {partner.tasks.map((task, taskIndex) => (
+                    <div key={taskIndex} className={`p-3 rounded-lg border ${
+                      isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                    }`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="font-medium">{task.name}</div>
+                        <div className="flex items-center space-x-2">
+                          <span className={`px-2 py-1 rounded text-xs ${
+                            task.importance === 'HIGH' ? 'bg-red-100 text-red-800' :
+                            task.importance === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-green-100 text-green-800'
+                          }`}>
+                            {task.importance}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        <span>Weight: {task.weight}</span>
+                        <span>Department: {partner.department}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Vesting Schedules Section */}
         <div className="mb-8">
           <VestingSchedule isDark={isDark} />
-        </div>
-
-        {/* Export Section */}
-        <div className={`rounded-2xl border-2 p-6 mb-8 ${
-          isDark 
-            ? 'bg-gray-800 border-gray-700' 
-            : 'bg-white border-gray-200'
-        }`}>
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">Export Report</h2>
-              <p className="text-gray-600 dark:text-gray-400">Generate comprehensive equity reports in PDF format</p>
-            </div>
-            <button className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center space-x-2">
-              <span>📄</span>
-              <span>Export to PDF</span>
-            </button>
-          </div>
         </div>
 
         {/* Detailed Information Table */}
@@ -235,6 +346,24 @@ export default function Reports() {
           } border border-gray-200 dark:border-gray-700`}>
             <div className="text-3xl font-bold text-orange-600 mb-2">48</div>
             <div className="text-sm text-gray-500">Vesting Months</div>
+          </div>
+        </div>
+
+        {/* Export Section */}
+        <div className={`rounded-2xl border-2 p-6 mt-8 ${
+          isDark 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold mb-2">Export Report</h2>
+              <p className="text-gray-600 dark:text-gray-400">Generate comprehensive equity reports in PDF format</p>
+            </div>
+            <button className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center space-x-2">
+              <span>📄</span>
+              <span>Export to PDF</span>
+            </button>
           </div>
         </div>
       </div>

@@ -225,4 +225,146 @@ export const taskRouter = createTRPCRouter({
         data: tasksData,
       });
     }),
+
+  // Assign task to partner
+  assignToPartner: publicProcedure
+    .input(
+      z.object({
+        taskId: z.string(),
+        partnerId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.taskAssignment.create({
+        data: {
+          taskId: input.taskId,
+          partnerId: input.partnerId,
+        },
+      });
+    }),
+
+  // Remove task assignment from partner
+  unassignFromPartner: publicProcedure
+    .input(
+      z.object({
+        taskId: z.string(),
+        partnerId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.taskAssignment.delete({
+        where: {
+          taskId_partnerId: {
+            taskId: input.taskId,
+            partnerId: input.partnerId,
+          },
+        },
+      });
+    }),
+
+  // Get task assignments for a partner
+  getPartnerAssignments: publicProcedure
+    .input(z.object({ partnerId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.db.taskAssignment.findMany({
+        where: { partnerId: input.partnerId },
+        include: {
+          task: {
+            include: {
+              department: true,
+            },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    }),
+
+  // Get partners assigned to a task
+  getTaskAssignments: publicProcedure
+    .input(z.object({ taskId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.db.taskAssignment.findMany({
+        where: { taskId: input.taskId },
+        include: {
+          partner: true,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    }),
+
+  // Calculate partner effort based on assigned tasks
+  calculatePartnerEffort: publicProcedure
+    .input(z.object({ partnerId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const partner = await ctx.db.partner.findUnique({
+        where: { id: input.partnerId },
+        include: {
+          taskAssignments: {
+            include: {
+              task: {
+                include: {
+                  department: true,
+                },
+              },
+            },
+          },
+          company: {
+            select: {
+              effortWeight: true,
+            },
+          },
+        },
+      });
+
+      if (!partner) return null;
+
+      // Group tasks by department
+      const departmentTasks = new Map<string, any[]>();
+      partner.taskAssignments.forEach((assignment) => {
+        const deptId = assignment.task.department.id;
+        if (!departmentTasks.has(deptId)) {
+          departmentTasks.set(deptId, []);
+        }
+        departmentTasks.get(deptId)!.push(assignment.task);
+      });
+
+      const effortBreakdown = Array.from(departmentTasks.entries()).map(([deptId, tasks]) => {
+        const department = tasks[0]?.department;
+        if (!department) return null;
+
+        const totalTaskWeight = tasks.reduce((sum, task) => sum + task.weight, 0);
+        const departmentWeight = department.weight;
+        const effortContribution = (totalTaskWeight / 100) * (departmentWeight / 100);
+
+        return {
+          departmentId: deptId,
+          departmentName: department.name,
+          departmentWeight,
+          taskCount: tasks.length,
+          totalTaskWeight,
+          effortContribution,
+          effortPercentage: effortContribution * 100,
+          tasks: tasks.map((task) => ({
+            id: task.id,
+            name: task.name,
+            weight: task.weight,
+            importance: task.importance,
+          })),
+        };
+      }).filter(Boolean);
+
+      const totalEffort = effortBreakdown.reduce((sum, dept) => sum + (dept?.effortContribution || 0), 0);
+
+      return {
+        partner: {
+          id: partner.id,
+          name: partner.name,
+          email: partner.email,
+        },
+        totalEffort,
+        totalEffortPercentage: totalEffort * 100,
+        effortBreakdown,
+        companyEffortWeight: partner.company.effortWeight,
+      };
+    }),
 });

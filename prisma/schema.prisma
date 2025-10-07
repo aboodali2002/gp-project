@@ -82,6 +82,7 @@ model Partner {
     companyId   String
     company     Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
     departments PartnerDepartment[]
+    taskAssignments TaskAssignment[]
     auditLogs   AuditLog[]
 
     @@map("partners")
@@ -115,8 +116,25 @@ model Task {
     // Relations
     departmentId String
     department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+    assignments  TaskAssignment[]
 
     @@map("tasks")
+}
+
+// Task assignment to partners
+model TaskAssignment {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relations
+    taskId    String
+    task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+    partnerId String
+    partner   Partner  @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+    @@unique([taskId, partnerId])
+    @@map("task_assignments")
 }
 
 // Audit log for tracking changes
