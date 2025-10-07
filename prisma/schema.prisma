@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = "file:./dev.db"
+}
+
+// User authentication and management
+model User {
+    id        String   @id @default(cuid())
+    email     String   @unique
+    name      String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relations
+    companies Company[]
+    auditLogs AuditLog[]
+
+    @@map("users")
+}
+
+// Company/Startup entity
+model Company {
+    id                String   @id @default(cuid())
+    name              String
+    totalShares       Int      @default(1000000) // Total shares in the company
+    capitalWeight     Float    @default(20.0) // Capital weight percentage (0-100)
+    effortWeight      Float    @default(80.0) // Effort weight percentage (0-100)
+    vestingPeriod     Int      @default(48) // Vesting period in months
+    vestingStartDate  DateTime
+    vestingMethod     VestingMethod @default(MONTHLY)
+    createdAt         DateTime @default(now())
+    updatedAt         DateTime @updatedAt
+
+    // Relations
+    ownerId           String
+    owner             User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    departments       Department[]
+    partners          Partner[]
+    auditLogs         AuditLog[]
+
+    @@map("companies")
+}
+
+// Department/Division within company
+model Department {
+    id        String   @id @default(cuid())
+    name      String
+    weight    Float    // Department weight percentage
+    description String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relations
+    companyId String
+    company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    tasks     Task[]
+    partners  PartnerDepartment[]
+
+    @@map("departments")
+}
+
+// Partner/Founder entity
+model Partner {
+    id          String   @id @default(cuid())
+    name        String
+    email       String
+    phone       String?
+    gender      String?
+    capitalContribution Float @default(0.0) // DEPRECATED: percent; kept for backward compatibility
+    capitalAmount       Float @default(0.0) // Capital amount in currency units
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    // Relations
+    companyId   String
+    company     Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    departments PartnerDepartment[]
+    auditLogs   AuditLog[]
+
+    @@map("partners")
+}
+
+// Many-to-many relationship between Partners and Departments
+model PartnerDepartment {
+    id           String @id @default(cuid())
+    partnerId    String
+    departmentId String
+    createdAt    DateTime @default(now())
+
+    // Relations
+    partner      Partner    @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+    department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+    @@unique([partnerId, departmentId])
+    @@map("partner_departments")
+}
+
+// Task entity
+model Task {
+    id           String        @id @default(cuid())
+    name         String
+    description  String?
+    importance   TaskImportance @default(LOW)
+    weight       Int           @default(1) // Calculated based on importance
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+
+    // Relations
+    departmentId String
+    department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+    @@map("tasks")
+}
+
+// Audit log for tracking changes
+model AuditLog {
+    id        String   @id @default(cuid())
+    action    String   // What was changed
+    oldValue  String?  // Previous value (JSON)
+    newValue  String?  // New value (JSON)
+    createdAt DateTime @default(now())
+
+    // Relations
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+    companyId String
+    company   Company  @relation(fields: [companyId], references: [id])
+    partnerId String?
+    partner   Partner? @relation(fields: [partnerId], references: [id])
+
+    @@map("audit_logs")
+}
+
+// Enums
+enum VestingMethod {
+    MONTHLY
+    QUARTERLY
+    ANNUAL
+}
+
+enum TaskImportance {
+    LOW
+    MEDIUM
+    HIGH
+}
