@@ -1,0 +1,263 @@
+{
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "taskAssignment": "Task Assignment",
+    "reports": "Reports",
+    "signIn": "Sign In",
+    "getStarted": "Get Started"
+  },
+  "home": {
+    "title": "Fair Equity Management",
+    "subtitle": "for Startup Founders",
+    "description": "Calculate and manage fair equity splits based on roles and major tasks across stages, with periodic adjustments and comprehensive reporting.",
+    "getStartedFree": "Get Started Free",
+    "readyToGetStarted": "Ready to Get Started?",
+    "joinThousands": "Join thousands of startups managing their equity with transparency and fairness.",
+    "startFreeTrial": "Start Free Trial",
+    "features": {
+      "smartAllocation": {
+        "title": "Smart Allocation",
+        "description": "Dynamic capital vs effort weighting with real-time validation and visual feedback.",
+        "features": [
+          "Department-based equity distribution",
+          "Task importance weighting system",
+          "Instant validation and corrections"
+        ]
+      },
+      "partnerManagement": {
+        "title": "Partner Management",
+        "description": "Comprehensive founder and partner management with multi-department assignments.",
+        "features": [
+          "Multi-department partner assignments",
+          "Capital contribution tracking",
+          "Individual equity calculations"
+        ]
+      },
+      "analyticsReporting": {
+        "title": "Analytics & Reporting",
+        "description": "Advanced visualizations and comprehensive reporting with PDF export capabilities.",
+        "features": [
+          "Interactive equity dashboards",
+          "Vesting schedule tracking",
+          "PDF report generation"
+        ]
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Management Dashboard",
+    "description": "All-in-one equity management platform",
+    "companySetup": {
+      "title": "Company Setup",
+      "companyName": "Company Name",
+      "totalShares": "Total Shares",
+      "vestingPeriod": "Vesting Period (months)"
+    },
+    "capitalEffort": {
+      "title": "Capital vs Effort Split",
+      "capitalWeight": "Capital Weight",
+      "capital": "Capital",
+      "effort": "Effort"
+    },
+    "quickInsights": {
+      "title": "Quick Insights",
+      "departments": "Departments",
+      "partners": "Partners",
+      "allocationValid": "Allocation Valid"
+    },
+    "departmentManagement": {
+      "title": "Department Management",
+      "weight": "Weight",
+      "addDepartment": "Add Department",
+      "departmentName": "Department name",
+      "total": "Total",
+      "expected": "Expected",
+      "noDepartments": "No departments added yet. Add your first department to get started."
+    },
+    "partnerManagement": {
+      "title": "Partner Management",
+      "capitalAmount": "Capital Amount",
+      "assignedTo": "Assigned to",
+      "fullName": "Full name",
+      "email": "Email",
+      "amount": "Amount",
+      "assignToDepartments": "Assign to Departments",
+      "addPartner": "Add Partner",
+      "totalCapitalCommitted": "Total Capital Committed",
+      "noPartners": "No partners added yet. Add your first partner to get started."
+    },
+    "taskManagement": {
+      "title": "Task Management",
+      "total": "Total",
+      "tasks": "tasks",
+      "highPriority": "High Priority",
+      "addTask": "Add Task",
+      "taskName": "Task name",
+      "selectDepartment": "Select department",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "weight": "Weight",
+      "assignPartners": "Assign Partners",
+      "noPartnersAvailable": "No partners available for this department",
+      "department": "Department",
+      "assignedPartners": "Assigned Partners",
+      "noTasks": "No tasks added yet. Add your first task to get started."
+    },
+    "common": {
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "remove": "Remove",
+      "saveDraft": "Save Draft",
+      "viewReports": "View Reports"
+    }
+  },
+  "auth": {
+    "signInTitle": "Sign in to your account",
+    "or": "Or",
+    "createNewAccount": "create a new account",
+    "emailAddress": "Email address",
+    "enterEmail": "Enter your email",
+    "password": "Password",
+    "enterPassword": "Enter your password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot your password?",
+    "signIn": "Sign in",
+    "createAccountTitle": "Create your account",
+    "alreadyHaveAccount": "Already have an account?",
+    "signInHere": "Sign in here",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "companyNameOptional": "Company name (optional)",
+    "yourStartupName": "Your startup name",
+    "confirmPassword": "Confirm password",
+    "confirmYourPassword": "Confirm your password",
+    "agreeToTerms": "I agree to the",
+    "termsAndConditions": "Terms and Conditions",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "createAccount": "Create account",
+    "invalidCredentials": "Invalid email or password",
+    "loginFailed": "Login failed. Please try again.",
+    "registrationFailed": "Registration failed. Please try again.",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 8 characters long",
+    "mustAgreeToTerms": "You must agree to the terms and conditions",
+    "common": {
+      "companyName": "CorporateQuota"
+    }
+  },
+  "companySetup": {
+    "loading": "Loading...",
+    "companyInfo": "Company Info",
+    "equityLogic": "Equity Logic",
+    "complete": "Complete",
+    "companyInformation": "Company Information",
+    "companyName": "Company Name",
+    "enterCompanyName": "Enter your company name",
+    "totalShares": "Total Shares",
+    "vestingPeriod": "Vesting Period (months)",
+    "vestingStartDate": "Vesting Start Date",
+    "vestingMethod": "Vesting Method",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "annual": "Annual",
+    "nextEquityLogic": "Next: Equity Logic",
+    "equityAllocationLogic": "Equity Allocation Logic",
+    "capitalWeight": "Capital Weight",
+    "capitalWeightDescription": "This determines how much equity is allocated based on capital contribution vs effort.",
+    "allocationSummary": "Allocation Summary",
+    "capitalBasedEquity": "Capital-based equity",
+    "effortBasedEquity": "Effort-based equity",
+    "nextSteps": "Next Steps",
+    "nextStepsDescription": "After setting the capital weight, you'll add departments and assign effort weights to them. The total department weights must equal the effort percentage ({effortPercent}%).",
+    "back": "Back",
+    "creating": "Creating...",
+    "createCompany": "Create Company",
+    "companyCreatedSuccessfully": "Company Created Successfully!",
+    "companyCreatedDescription": "Your company \"{companyName}\" has been created. You can now add departments, partners, and tasks.",
+    "goToDashboard": "Go to Dashboard"
+  },
+  "reports": {
+    "title": "Reports & Analytics",
+    "description": "Comprehensive equity analysis and visualizations",
+    "departmentWeights": "Department Weights",
+    "partnerEquityDistribution": "Partner Equity Distribution",
+    "equityShare": "Equity Share",
+    "partnerTasksAssignments": "Partner Tasks & Assignments",
+    "totalTasks": "Total Tasks",
+    "weight": "Weight",
+    "department": "Department",
+    "detailedEquityBreakdown": "Detailed Equity Breakdown",
+    "detailedEquityDescription": "Complete partner and department equity analysis",
+    "partner": "Partner",
+    "capital": "Capital ($)",
+    "capitalPercent": "Capital %",
+    "effortPercent": "Effort %",
+    "totalPercent": "Total %",
+    "totalPartners": "Total Partners",
+    "departments": "Departments",
+    "equityAllocated": "Equity Allocated",
+    "vestingMonths": "Vesting Months",
+    "exportReport": "Export Report",
+    "exportDescription": "Generate comprehensive equity reports in PDF format",
+    "exportToPDF": "Export to PDF"
+  },
+  "welcome": {
+    "companyName": "CorporateQuota",
+    "title": "Fair Equity Management",
+    "subtitle": "for Startup Founders",
+    "description": "Calculate and manage fair equity splits based on roles and major tasks across stages, with periodic adjustments and comprehensive reporting.",
+    "startFreeTrial": "Start Free Trial",
+    "signIn": "Sign In",
+    "freeTrialBenefits": "Free Trial Benefits",
+    "benefit1Title": "No Credit Card Required",
+    "benefit1Description": "Start your free trial immediately without any payment information",
+    "benefit2Title": "Full Access",
+    "benefit2Description": "Complete access to all features and tools for 14 days",
+    "benefit3Title": "Expert Support",
+    "benefit3Description": "Get help from our equity management experts",
+    "readyToGetStarted": "Ready to Get Started?",
+    "joinThousands": "Join thousands of startups managing their equity with transparency and fairness.",
+    "features": {
+      "smartAllocation": {
+        "title": "Smart Allocation",
+        "description": "Dynamic capital vs effort weighting with real-time validation and visual feedback.",
+        "features": [
+          "Department-based equity distribution",
+          "Task importance weighting system",
+          "Instant validation and corrections"
+        ]
+      },
+      "partnerManagement": {
+        "title": "Partner Management",
+        "description": "Comprehensive founder and partner management with multi-department assignments.",
+        "features": [
+          "Multi-department partner assignments",
+          "Capital contribution tracking",
+          "Individual equity calculations"
+        ]
+      },
+      "analyticsReporting": {
+        "title": "Analytics & Reporting",
+        "description": "Advanced visualizations and comprehensive reporting with PDF export capabilities.",
+        "features": [
+          "Interactive equity dashboards",
+          "Vesting schedule tracking",
+          "PDF report generation"
+        ]
+      }
+    }
+  },
+  "common": {
+    "companyName": "CorporateQuota",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "draftSaved": "Draft saved successfully!",
+    "saveDraft": "Save Draft",
+    "viewReports": "View Reports"
+  }
+}

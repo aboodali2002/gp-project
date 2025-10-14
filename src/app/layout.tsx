@@ -21,7 +21,22 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
+    <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Set initial attributes before React hydration
+              (function() {
+                const path = window.location.pathname;
+                const locale = path.startsWith('/ar') ? 'ar' : 'en';
+                document.documentElement.lang = locale;
+                document.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr';
+              })();
+            `,
+          }}
+        />
+      </head>
       <body>
         <TRPCReactProvider>
           <AuthProvider>

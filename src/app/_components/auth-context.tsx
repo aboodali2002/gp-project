@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation";
 interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   companyName?: string;
 }
 
@@ -16,8 +15,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   register: (userData: {
-    firstName: string;
-    lastName: string;
+    fullName: string;
     email: string;
     password: string;
     companyName?: string;
@@ -78,8 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const register = async (userData: {
-    firstName: string;
-    lastName: string;
+    fullName: string;
     email: string;
     password: string;
     companyName?: string;
@@ -92,8 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const newUser: User = {
         id: "cmg2ddubs0000wmrxtxtnj3q1",
         email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
+        fullName: userData.fullName,
         companyName: userData.companyName
       };
 

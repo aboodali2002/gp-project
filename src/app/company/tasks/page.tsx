@@ -58,7 +58,6 @@ export default function TasksPage() {
   ]);
 
   const [showAddForm, setShowAddForm] = useState(false);
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [newTask, setNewTask] = useState({
     name: "",
     description: "",
@@ -116,13 +115,6 @@ export default function TasksPage() {
     }
   };
 
-  const updateTask = (id: string, updates: Partial<Task>) => {
-    setTasks(tasks.map(task => 
-      task.id === id ? { ...task, ...updates } : task
-    ));
-    setEditingTask(null);
-  };
-
   const removeTask = (id: string) => {
     setTasks(tasks.filter(task => task.id !== id));
   };
@@ -136,7 +128,7 @@ export default function TasksPage() {
   const assignPartnerToTask = (taskId: string, partnerId: string) => {
     setTasks(tasks.map(task => {
       if (task.id === taskId) {
-        const currentAssignments = task.assignedPartners || [];
+        const currentAssignments = task.assignedPartners ?? [];
         const isAssigned = currentAssignments.includes(partnerId);
         
         if (isAssigned) {
@@ -327,7 +319,6 @@ export default function TasksPage() {
                   <div className="space-y-2">
                     {dept.tasks.map((task) => {
                       const assignedPartners = getAssignedPartnersForTask(task);
-                      const availablePartners = getAvailablePartnersForTask(task.department);
                       
                       return (
                         <div key={task.id} className="p-3 bg-gray-50 rounded-md">

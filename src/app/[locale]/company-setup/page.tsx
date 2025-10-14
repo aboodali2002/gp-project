@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { api } from "~/trpc/react";
-import { useAuth } from "../_components/auth-context";
+import { useAuth } from "../../_components/auth-context";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTranslations, useLocale } from 'next-intl';
+import { TopNavigation } from "../_components/top-navigation";
 
 export default function CompanySetup() {
   const [step, setStep] = useState(1);
@@ -18,12 +20,14 @@ export default function CompanySetup() {
   });
   const { user, isLoading, logout } = useAuth();
   const router = useRouter();
+  const t = useTranslations('companySetup');
+  const locale = useLocale();
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push("/login");
+      router.push(`/${locale}/login`);
     }
-  }, [user, isLoading, router]);
+  }, [user, isLoading, router, locale]);
 
   const createCompany = api.company.create.useMutation({
     onSuccess: (data) => {
@@ -40,7 +44,7 @@ export default function CompanySetup() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 text-gray-600">{t('loading')}</p>
         </div>
       </div>
     );
@@ -56,34 +60,18 @@ export default function CompanySetup() {
     
     createCompany.mutate({
       ...formData,
-      vestingStartDate: new Date(formData.vestingStartDate ?? new Date()),
+      vestingStartDate: new Date(formData.vestingStartDate || new Date()),
       ownerId: user.id,
     });
   };
 
-  const updateFormData = (field: string, value: string | number) => {
+  const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header with user info and logout */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="text-xl font-bold">CorporateQuota</div>
-          <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-600">
-              Welcome, {user.firstName} {user.lastName}
-            </span>
-            <button
-              onClick={logout}
-              className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </div>
+      <TopNavigation />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
@@ -109,9 +97,9 @@ export default function CompanySetup() {
             </div>
             <div className="flex justify-center mt-2 text-sm text-gray-600">
               <div className="flex items-center space-x-16">
-                <span className="text-center">Company Info</span>
-                <span className="text-center">Equity Logic</span>
-                <span className="text-center">Complete</span>
+                <span className="text-center">{t('companyInfo')}</span>
+                <span className="text-center">{t('equityLogic')}</span>
+                <span className="text-center">{t('complete')}</span>
               </div>
             </div>
           </div>
@@ -119,26 +107,26 @@ export default function CompanySetup() {
           <div className="bg-white rounded-lg shadow-sm border p-6">
             {step === 1 && (
               <div>
-                <h2 className="text-2xl font-semibold mb-6">Company Information</h2>
+                <h2 className="text-2xl font-semibold mb-6">{t('companyInformation')}</h2>
                 <form onSubmit={(e) => { e.preventDefault(); setStep(2); }}>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Company Name
+                        {t('companyName')}
                       </label>
                       <input
                         type="text"
                         value={formData.name}
                         onChange={(e) => updateFormData('name', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter your company name"
+                        placeholder={t('enterCompanyName')}
                         required
                       />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Total Shares
+                        {t('totalShares')}
                       </label>
                       <input
                         type="number"
@@ -152,7 +140,7 @@ export default function CompanySetup() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Vesting Period (months)
+                        {t('vestingPeriod')}
                       </label>
                       <input
                         type="number"
@@ -166,7 +154,7 @@ export default function CompanySetup() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Vesting Start Date
+                        {t('vestingStartDate')}
                       </label>
                       <input
                         type="date"
@@ -179,16 +167,16 @@ export default function CompanySetup() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Vesting Method
+                        {t('vestingMethod')}
                       </label>
                       <select
                         value={formData.vestingMethod}
                         onChange={(e) => updateFormData('vestingMethod', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
-                        <option value="MONTHLY">Monthly</option>
-                        <option value="QUARTERLY">Quarterly</option>
-                        <option value="ANNUAL">Annual</option>
+                        <option value="MONTHLY">{t('monthly')}</option>
+                        <option value="QUARTERLY">{t('quarterly')}</option>
+                        <option value="ANNUAL">{t('annual')}</option>
                       </select>
                     </div>
                   </div>
@@ -198,7 +186,7 @@ export default function CompanySetup() {
                       type="submit"
                       className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
                     >
-                      Next: Equity Logic
+                      {t('nextEquityLogic')}
                     </button>
                   </div>
                 </form>
@@ -207,11 +195,11 @@ export default function CompanySetup() {
 
             {step === 2 && (
               <div>
-                <h2 className="text-2xl font-semibold mb-6">Equity Allocation Logic</h2>
+                <h2 className="text-2xl font-semibold mb-6">{t('equityAllocationLogic')}</h2>
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Capital Weight (%)
+                      {t('capitalWeight')} (%)
                     </label>
                     <div className="flex items-center space-x-4">
                       <input
@@ -225,29 +213,28 @@ export default function CompanySetup() {
                       <span className="text-lg font-medium w-16">{formData.capitalWeight}%</span>
                     </div>
                     <p className="text-sm text-gray-600 mt-1">
-                      This determines how much equity is allocated based on capital contribution vs effort.
+                      {t('capitalWeightDescription')}
                     </p>
                   </div>
 
                   <div className="bg-gray-50 p-4 rounded-md">
-                    <h3 className="font-medium mb-2">Allocation Summary</h3>
+                    <h3 className="font-medium mb-2">{t('allocationSummary')}</h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span>Capital-based equity:</span>
+                        <span>{t('capitalBasedEquity')}:</span>
                         <span className="font-medium">{formData.capitalWeight}%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Effort-based equity:</span>
+                        <span>{t('effortBasedEquity')}:</span>
                         <span className="font-medium">{100 - formData.capitalWeight}%</span>
                       </div>
                     </div>
                   </div>
 
                   <div className="bg-blue-50 p-4 rounded-md">
-                    <h3 className="font-medium text-blue-900 mb-2">Next Steps</h3>
+                    <h3 className="font-medium text-blue-900 mb-2">{t('nextSteps')}</h3>
                     <p className="text-sm text-blue-800">
-                      After setting the capital weight, you&apos;ll add departments and assign effort weights to them.
-                      The total department weights must equal the effort percentage ({100 - formData.capitalWeight}%).
+                      {t('nextStepsDescription', { effortPercent: 100 - formData.capitalWeight })}
                     </p>
                   </div>
                 </div>
@@ -257,14 +244,14 @@ export default function CompanySetup() {
                     onClick={() => setStep(1)}
                     className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
                   >
-                    Back
+                    {t('back')}
                   </button>
                   <button
                     onClick={handleSubmit}
                     disabled={createCompany.isPending}
                     className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
                   >
-                    {createCompany.isPending ? "Creating..." : "Create Company"}
+                    {createCompany.isPending ? t('creating') : t('createCompany')}
                   </button>
                 </div>
               </div>
@@ -277,17 +264,17 @@ export default function CompanySetup() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-semibold mb-4">Company Created Successfully!</h2>
+                <h2 className="text-2xl font-semibold mb-4">{t('companyCreatedSuccessfully')}</h2>
                 <p className="text-gray-600 mb-6">
-                  Your company &quot;{formData.name}&quot; has been created. You can now add departments, partners, and tasks.
+                  {t('companyCreatedDescription', { companyName: formData.name })}
                 </p>
                 <div className="space-y-2">
-                  <Link
-                    href="/dashboard"
+                  <a
+                    href={`/${locale}/dashboard`}
                     className="block bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
                   >
-                    Go to Dashboard
-                  </Link>
+                    {t('goToDashboard')}
+                  </a>
                 </div>
               </div>
             )}

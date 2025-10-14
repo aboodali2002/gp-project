@@ -3,6 +3,7 @@ import { companyRouter } from "~/server/api/routers/company";
 import { departmentRouter } from "~/server/api/routers/department";
 import { partnerRouter } from "~/server/api/routers/partner";
 import { taskRouter } from "~/server/api/routers/task";
+import { reportRouter } from "~/server/api/routers/report";
 import { equityRouter } from "~/server/api/routers/equity";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   partner: partnerRouter,
   task: taskRouter,
   equity: equityRouter,
+  report: reportRouter,
 });
 
 // export type definition of API

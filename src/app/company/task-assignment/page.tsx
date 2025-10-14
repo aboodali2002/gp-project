@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { api } from "~/trpc/react";
 
 interface Partner {
   id: string;
@@ -43,7 +42,7 @@ export default function TaskAssignmentPage() {
   const [showAssignmentForm, setShowAssignmentForm] = useState(false);
 
   // Mock data for demonstration - in real app this would come from API
-  const [partners, setPartners] = useState<Partner[]>([
+  const [partners] = useState<Partner[]>([
     {
       id: "partner-1",
       name: "Ahmed Khaled",
@@ -88,7 +87,7 @@ export default function TaskAssignmentPage() {
     }
   ]);
 
-  const [tasks, setTasks] = useState<Task[]>([
+  const [tasks] = useState<Task[]>([
     {
       id: "task-1",
       name: "Develop core API",
@@ -151,11 +150,13 @@ export default function TaskAssignmentPage() {
     : [];
 
   // Filter partners based on selected task's department
-  const availablePartners = selectedTask
-    ? partners.filter(partner => 
+  if (selectedTask)
+    {
+        partners.filter(partner => 
         partner.departments.some(dept => dept.department.id === tasks.find(t => t.id === selectedTask)?.department.id)
       )
-    : [];
+    }
+    ;
 
   const assignTask = () => {
     if (selectedPartner && selectedTask) {
@@ -187,7 +188,7 @@ export default function TaskAssignmentPage() {
     let totalEffort = 0;
     
     // Group by department
-    const departmentGroups = new Map<string, any[]>();
+    const departmentGroups = new Map<string, TaskAssignment[]>();
     partnerAssignments.forEach(assignment => {
       const deptId = assignment.task.department.id;
       if (!departmentGroups.has(deptId)) {
@@ -196,10 +197,10 @@ export default function TaskAssignmentPage() {
       departmentGroups.get(deptId)!.push(assignment);
     });
 
-    const effortBreakdown = Array.from(departmentGroups.entries()).map(([deptId, assignments]) => {
+    const effortBreakdown = Array.from(departmentGroups.entries()).map(([_deptId, assignments]) => {
       const department = assignments[0]?.task.department;
       const totalTaskWeight = assignments.reduce((sum, a) => sum + a.task.weight, 0);
-      const departmentWeight = department?.weight || 0;
+      const departmentWeight = department?.weight ?? 0;
       const effortContribution = (totalTaskWeight / 100) * (departmentWeight / 100);
       
       return {

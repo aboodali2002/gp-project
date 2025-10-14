@@ -5,6 +5,9 @@
 import "./src/env.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 /** @type {import("next").NextConfig} */
 const ROOT_DIR = dirname(fileURLToPath(import.meta.url));
@@ -17,4 +20,4 @@ const config = {
   },
 };
 
-export default config;
+export default withNextIntl(config);

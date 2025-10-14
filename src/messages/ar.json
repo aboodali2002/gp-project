@@ -1,0 +1,260 @@
+{
+  "navigation": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة التحكم",
+    "taskAssignment": "تخصيص المهام",
+    "reports": "التقارير",
+    "signIn": "تسجيل الدخول",
+    "getStarted": "ابدأ الآن"
+  },
+  "home": {
+    "title": "إدارة الأسهم العادلة",
+    "subtitle": "لمؤسسي الشركات الناشئة",
+    "description": "احسب وأدر تقسيم الأسهم العادلة بناءً على الأدوار والمهام الرئيسية عبر المراحل، مع التعديلات الدورية والتقارير الشاملة.",
+    "getStartedFree": "ابدأ مجاناً",
+    "readyToGetStarted": "مستعد للبدء؟",
+    "joinThousands": "انضم إلى آلاف الشركات الناشئة التي تدير أسهمها بشفافية وإنصاف.",
+    "startFreeTrial": "ابدأ التجربة المجانية",
+    "features": {
+      "smartAllocation": {
+        "title": "التخصيص الذكي",
+        "description": "وزن ديناميكي بين رأس المال والجهد مع التحقق في الوقت الفعلي والملاحظات البصرية.",
+        "features": [
+          "توزيع الأسهم حسب القسم",
+          "نظام وزن أهمية المهام",
+          "التحقق الفوري والتصحيحات"
+        ]
+      },
+      "partnerManagement": {
+        "title": "إدارة الشركاء",
+        "description": "إدارة شاملة للمؤسسين والشركاء مع تخصيصات متعددة الأقسام.",
+        "features": [
+          "تخصيصات الشركاء متعددة الأقسام",
+          "تتبع مساهمات رأس المال",
+          "حسابات الأسهم الفردية"
+        ]
+      },
+      "analyticsReporting": {
+        "title": "التحليلات والتقارير",
+        "description": "تصورات متقدمة وتقارير شاملة مع إمكانيات تصدير PDF.",
+        "features": [
+          "لوحات تحكم الأسهم التفاعلية",
+          "تتبع جدول الاستحقاق",
+          "توليد تقارير PDF"
+        ]
+      }
+    }
+  },
+  "dashboard": {
+    "title": "لوحة تحكم الإدارة",
+    "description": "منصة شاملة لإدارة الأسهم",
+    "companySetup": {
+      "title": "إعداد الشركة",
+      "companyName": "اسم الشركة",
+      "totalShares": "إجمالي الأسهم",
+      "vestingPeriod": "فترة الاستحقاق (بالأشهر)"
+    },
+    "capitalEffort": {
+      "title": "تقسيم رأس المال مقابل الجهد",
+      "capitalWeight": "وزن رأس المال",
+      "capital": "رأس المال",
+      "effort": "الجهد"
+    },
+    "quickInsights": {
+      "title": "رؤى سريعة",
+      "departments": "الأقسام",
+      "partners": "الشركاء",
+      "allocationValid": "التخصيص صحيح"
+    },
+    "departmentManagement": {
+      "title": "إدارة الأقسام",
+      "weight": "الوزن",
+      "addDepartment": "إضافة قسم",
+      "departmentName": "اسم القسم",
+      "total": "المجموع",
+      "expected": "المتوقع",
+      "noDepartments": "لم يتم إضافة أي أقسام بعد. أضف أول قسم للبدء."
+    },
+    "partnerManagement": {
+      "title": "إدارة الشركاء",
+      "capitalAmount": "مبلغ رأس المال",
+      "assignedTo": "مُخصص لـ",
+      "fullName": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "amount": "المبلغ",
+      "assignToDepartments": "تخصيص للأقسام",
+      "addPartner": "إضافة شريك",
+      "totalCapitalCommitted": "إجمالي رأس المال الملتزم",
+      "noPartners": "لم يتم إضافة أي شركاء بعد. أضف أول شريك للبدء."
+    },
+    "taskManagement": {
+      "title": "إدارة المهام",
+      "total": "المجموع",
+      "tasks": "مهام",
+      "highPriority": "أولوية عالية",
+      "addTask": "إضافة مهمة",
+      "taskName": "اسم المهمة",
+      "selectDepartment": "اختر القسم",
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي",
+      "weight": "الوزن",
+      "assignPartners": "تخصيص الشركاء",
+      "noPartnersAvailable": "لا يوجد شركاء متاحون لهذا القسم",
+      "department": "القسم",
+      "assignedPartners": "الشركاء المُخصصون",
+      "noTasks": "لم يتم إضافة أي مهام بعد. أضف أول مهمة للبدء."
+    },
+    "common": {
+      "cancel": "إلغاء",
+      "edit": "تعديل",
+      "remove": "إزالة",
+      "saveDraft": "حفظ كمسودة",
+      "viewReports": "عرض التقارير"
+    }
+  },
+  "auth": {
+    "signInTitle": "تسجيل الدخول إلى حسابك",
+    "or": "أو",
+    "createNewAccount": "إنشاء حساب جديد",
+    "emailAddress": "عنوان البريد الإلكتروني",
+    "enterEmail": "أدخل بريدك الإلكتروني",
+    "password": "كلمة المرور",
+    "enterPassword": "أدخل كلمة المرور",
+    "rememberMe": "تذكرني",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "signIn": "تسجيل الدخول",
+    "createAccountTitle": "إنشاء حسابك",
+    "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+    "signInHere": "سجل الدخول هنا",
+    "firstName": "الاسم الأول",
+    "lastName": "الاسم الأخير",
+    "companyNameOptional": "اسم الشركة (اختياري)",
+    "yourStartupName": "اسم شركتك الناشئة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "confirmYourPassword": "أكد كلمة المرور",
+    "agreeToTerms": "أوافق على",
+    "termsAndConditions": "الشروط والأحكام",
+    "and": "و",
+    "privacyPolicy": "سياسة الخصوصية",
+    "createAccount": "إنشاء حساب",
+    "invalidCredentials": "بريد إلكتروني أو كلمة مرور غير صحيحة",
+    "loginFailed": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
+    "registrationFailed": "فشل التسجيل. يرجى المحاولة مرة أخرى.",
+    "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+    "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "mustAgreeToTerms": "يجب أن توافق على الشروط والأحكام"
+  },
+  "companySetup": {
+    "loading": "جاري التحميل...",
+    "companyInfo": "معلومات الشركة",
+    "equityLogic": "منطق الأسهم",
+    "complete": "مكتمل",
+    "companyInformation": "معلومات الشركة",
+    "companyName": "اسم الشركة",
+    "enterCompanyName": "أدخل اسم شركتك",
+    "totalShares": "إجمالي الأسهم",
+    "vestingPeriod": "فترة الاستحقاق (بالأشهر)",
+    "vestingStartDate": "تاريخ بداية الاستحقاق",
+    "vestingMethod": "طريقة الاستحقاق",
+    "monthly": "شهري",
+    "quarterly": "ربعي",
+    "annual": "سنوي",
+    "nextEquityLogic": "التالي: منطق الأسهم",
+    "equityAllocationLogic": "منطق تخصيص الأسهم",
+    "capitalWeight": "وزن رأس المال",
+    "capitalWeightDescription": "هذا يحدد مقدار الأسهم المخصصة بناءً على مساهمة رأس المال مقابل الجهد.",
+    "allocationSummary": "ملخص التخصيص",
+    "capitalBasedEquity": "الأسهم القائمة على رأس المال",
+    "effortBasedEquity": "الأسهم القائمة على الجهد",
+    "nextSteps": "الخطوات التالية",
+    "nextStepsDescription": "بعد تحديد وزن رأس المال، ستضيف الأقسام وتخصص أوزان الجهد لها. يجب أن يساوي إجمالي أوزان الأقسام نسبة الجهد ({effortPercent}%).",
+    "back": "رجوع",
+    "creating": "جاري الإنشاء...",
+    "createCompany": "إنشاء الشركة",
+    "companyCreatedSuccessfully": "تم إنشاء الشركة بنجاح!",
+    "companyCreatedDescription": "تم إنشاء شركتك \"{companyName}\". يمكنك الآن إضافة الأقسام والشركاء والمهام.",
+    "goToDashboard": "الذهاب إلى لوحة التحكم"
+  },
+  "reports": {
+    "title": "التقارير والتحليلات",
+    "description": "تحليل شامل للأسهم والتصورات",
+    "departmentWeights": "أوزان الأقسام",
+    "partnerEquityDistribution": "توزيع أسهم الشركاء",
+    "equityShare": "حصة الأسهم",
+    "partnerTasksAssignments": "مهام وتخصيصات الشركاء",
+    "totalTasks": "إجمالي المهام",
+    "weight": "الوزن",
+    "department": "القسم",
+    "detailedEquityBreakdown": "تفصيل مفصل للأسهم",
+    "detailedEquityDescription": "تحليل شامل لأسهم الشركاء والأقسام",
+    "partner": "الشريك",
+    "capital": "رأس المال ($)",
+    "capitalPercent": "نسبة رأس المال %",
+    "effortPercent": "نسبة الجهد %",
+    "totalPercent": "النسبة الإجمالية %",
+    "totalPartners": "إجمالي الشركاء",
+    "departments": "الأقسام",
+    "equityAllocated": "الأسهم المخصصة",
+    "vestingMonths": "أشهر الاستحقاق",
+    "exportReport": "تصدير التقرير",
+    "exportDescription": "توليد تقارير شاملة للأسهم بصيغة PDF",
+    "exportToPDF": "تصدير إلى PDF"
+  },
+  "welcome": {
+    "companyName": "كوربوريت كوتا",
+    "title": "إدارة الأسهم العادلة",
+    "subtitle": "لمؤسسي الشركات الناشئة",
+    "description": "احسب وأدر تقسيم الأسهم العادلة بناءً على الأدوار والمهام الرئيسية عبر المراحل، مع التعديلات الدورية والتقارير الشاملة.",
+    "startFreeTrial": "ابدأ التجربة المجانية",
+    "signIn": "تسجيل الدخول",
+    "freeTrialBenefits": "مزايا التجربة المجانية",
+    "benefit1Title": "لا حاجة لبطاقة ائتمان",
+    "benefit1Description": "ابدأ تجربتك المجانية فوراً دون أي معلومات دفع",
+    "benefit2Title": "وصول كامل",
+    "benefit2Description": "وصول كامل لجميع الميزات والأدوات لمدة 14 يوماً",
+    "benefit3Title": "دعم الخبراء",
+    "benefit3Description": "احصل على المساعدة من خبراء إدارة الأسهم لدينا",
+    "readyToGetStarted": "مستعد للبدء؟",
+    "joinThousands": "انضم إلى آلاف الشركات الناشئة التي تدير أسهمها بشفافية وإنصاف.",
+    "features": {
+      "smartAllocation": {
+        "title": "التخصيص الذكي",
+        "description": "وزن ديناميكي بين رأس المال والجهد مع التحقق في الوقت الفعلي والملاحظات البصرية.",
+        "features": [
+          "توزيع الأسهم حسب القسم",
+          "نظام وزن أهمية المهام",
+          "التحقق الفوري والتصحيحات"
+        ]
+      },
+      "partnerManagement": {
+        "title": "إدارة الشركاء",
+        "description": "إدارة شاملة للمؤسسين والشركاء مع تخصيصات متعددة الأقسام.",
+        "features": [
+          "تخصيصات الشركاء متعددة الأقسام",
+          "تتبع مساهمات رأس المال",
+          "حسابات الأسهم الفردية"
+        ]
+      },
+      "analyticsReporting": {
+        "title": "التحليلات والتقارير",
+        "description": "تصورات متقدمة وتقارير شاملة مع إمكانيات تصدير PDF.",
+        "features": [
+          "لوحات تحكم الأسهم التفاعلية",
+          "تتبع جدول الاستحقاق",
+          "توليد تقارير PDF"
+        ]
+      }
+    }
+  },
+  "common": {
+    "companyName": "كوربوريت كوتا",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "remove": "إزالة",
+    "draftSaved": "تم حفظ المسودة بنجاح!",
+    "saveDraft": "حفظ المسودة",
+    "viewReports": "عرض التقارير"
+  }
+}

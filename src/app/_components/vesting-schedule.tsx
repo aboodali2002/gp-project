@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface VestingScheduleProps {
   isDark: boolean;
@@ -39,184 +39,110 @@ interface PartnerVestingData {
   schedule: VestingEntry[];
 }
 
-// Mock data for demonstration - in real app this would come from API
-const mockVestingData: PartnerVestingData[] = [
-  {
-    partner: {
-      id: "1",
-      name: "Mohammed Alojayan",
-      email: "mohammed.alojayan@example.com"
-    },
-    vestingPeriod: 48,
-    vestingStartDate: "2024-01-01",
-    vestingMethod: "MONTHLY",
-    totalShares: 1000000,
-    partnerShares: 350000,
-    capitalEquity: 0.15, // 15% from capital contribution
-    effortEquity: 0.20, // 20% from effort/tasks
-    totalEquity: 0.35, // 35% total equity
-    effortBreakdown: [
-      {
-        departmentName: "Engineering",
-        departmentWeight: 40,
-        taskCount: 3,
-        totalTaskWeight: 8,
-        effortContribution: 0.12,
-        effortPercentage: 12
-      },
-      {
-        departmentName: "Product",
-        departmentWeight: 20,
-        taskCount: 2,
-        totalTaskWeight: 4,
-        effortContribution: 0.08,
-        effortPercentage: 8
-      }
-    ],
-    schedule: [
-      { date: "2024-01-01", month: 0, vestingPercentage: 0, shares: 0, cumulativeShares: 0 },
-      { date: "2024-02-01", month: 1, vestingPercentage: 2.08, shares: 7292, cumulativeShares: 7292 },
-      { date: "2024-03-01", month: 2, vestingPercentage: 4.17, shares: 7292, cumulativeShares: 14583 },
-      { date: "2024-06-01", month: 6, vestingPercentage: 12.5, shares: 21875, cumulativeShares: 43750 },
-      { date: "2024-12-01", month: 12, vestingPercentage: 25, shares: 43750, cumulativeShares: 87500 },
-      { date: "2025-12-01", month: 24, vestingPercentage: 50, shares: 87500, cumulativeShares: 175000 },
-      { date: "2026-12-01", month: 36, vestingPercentage: 75, shares: 87500, cumulativeShares: 262500 },
-      { date: "2027-12-01", month: 48, vestingPercentage: 100, shares: 87500, cumulativeShares: 350000 }
-    ]
-  },
-  {
-    partner: {
-      id: "2",
-      name: "Ali Bohulaiqa",
-      email: "ali.bohulaiqa@example.com"
-    },
-    vestingPeriod: 48,
-    vestingStartDate: "2024-01-01",
-    vestingMethod: "QUARTERLY",
-    totalShares: 1000000,
-    partnerShares: 250000,
-    capitalEquity: 0.10, // 10% from capital contribution
-    effortEquity: 0.15, // 15% from effort/tasks
-    totalEquity: 0.25, // 25% total equity
-    effortBreakdown: [
-      {
-        departmentName: "Marketing",
-        departmentWeight: 30,
-        taskCount: 2,
-        totalTaskWeight: 3,
-        effortContribution: 0.09,
-        effortPercentage: 9
-      },
-      {
-        departmentName: "Sales",
-        departmentWeight: 10,
-        taskCount: 1,
-        totalTaskWeight: 2,
-        effortContribution: 0.06,
-        effortPercentage: 6
-      }
-    ],
-    schedule: [
-      { date: "2024-01-01", month: 0, vestingPercentage: 0, shares: 0, cumulativeShares: 0 },
-      { date: "2024-04-01", month: 3, vestingPercentage: 6.25, shares: 15625, cumulativeShares: 15625 },
-      { date: "2024-07-01", month: 6, vestingPercentage: 12.5, shares: 15625, cumulativeShares: 31250 },
-      { date: "2024-10-01", month: 9, vestingPercentage: 18.75, shares: 15625, cumulativeShares: 46875 },
-      { date: "2025-01-01", month: 12, vestingPercentage: 25, shares: 15625, cumulativeShares: 62500 },
-      { date: "2026-01-01", month: 24, vestingPercentage: 50, shares: 62500, cumulativeShares: 125000 },
-      { date: "2027-01-01", month: 36, vestingPercentage: 75, shares: 62500, cumulativeShares: 187500 },
-      { date: "2028-01-01", month: 48, vestingPercentage: 100, shares: 62500, cumulativeShares: 250000 }
-    ]
-  },
-  {
-    partner: {
-      id: "3",
-      name: "Abdullah Alsaeed",
-      email: "abdullah.alsaeed@example.com"
-    },
-    vestingPeriod: 48,
-    vestingStartDate: "2024-01-01",
-    vestingMethod: "ANNUAL",
-    totalShares: 1000000,
-    partnerShares: 200000,
-    capitalEquity: 0.08, // 8% from capital contribution
-    effortEquity: 0.12, // 12% from effort/tasks
-    totalEquity: 0.20, // 20% total equity
-    effortBreakdown: [
-      {
-        departmentName: "Operations",
-        departmentWeight: 15,
-        taskCount: 1,
-        totalTaskWeight: 2,
-        effortContribution: 0.06,
-        effortPercentage: 6
-      },
-      {
-        departmentName: "Finance",
-        departmentWeight: 10,
-        taskCount: 1,
-        totalTaskWeight: 1,
-        effortContribution: 0.06,
-        effortPercentage: 6
-      }
-    ],
-    schedule: [
-      { date: "2024-01-01", month: 0, vestingPercentage: 0, shares: 0, cumulativeShares: 0 },
-      { date: "2025-01-01", month: 12, vestingPercentage: 25, shares: 50000, cumulativeShares: 50000 },
-      { date: "2026-01-01", month: 24, vestingPercentage: 50, shares: 50000, cumulativeShares: 100000 },
-      { date: "2027-01-01", month: 36, vestingPercentage: 75, shares: 50000, cumulativeShares: 150000 },
-      { date: "2028-01-01", month: 48, vestingPercentage: 100, shares: 50000, cumulativeShares: 200000 }
-    ]
-  },
-  {
-    partner: {
-      id: "4",
-      name: "Mohammed Dhabab",
-      email: "mohammed.dhabab@example.com"
-    },
-    vestingPeriod: 48,
-    vestingStartDate: "2024-01-01",
-    vestingMethod: "MONTHLY",
-    totalShares: 1000000,
-    partnerShares: 200000,
-    capitalEquity: 0.05, // 5% from capital contribution
-    effortEquity: 0.15, // 15% from effort/tasks
-    totalEquity: 0.20, // 20% total equity
-    effortBreakdown: [
-      {
-        departmentName: "Product",
-        departmentWeight: 20,
-        taskCount: 2,
-        totalTaskWeight: 5,
-        effortContribution: 0.10,
-        effortPercentage: 10
-      },
-      {
-        departmentName: "Engineering",
-        departmentWeight: 40,
-        taskCount: 1,
-        totalTaskWeight: 3,
-        effortContribution: 0.05,
-        effortPercentage: 5
-      }
-    ],
-    schedule: [
-      { date: "2024-01-01", month: 0, vestingPercentage: 0, shares: 0, cumulativeShares: 0 },
-      { date: "2024-02-01", month: 1, vestingPercentage: 2.08, shares: 4167, cumulativeShares: 4167 },
-      { date: "2024-03-01", month: 2, vestingPercentage: 4.17, shares: 4167, cumulativeShares: 8333 },
-      { date: "2024-06-01", month: 6, vestingPercentage: 12.5, shares: 12500, cumulativeShares: 25000 },
-      { date: "2024-12-01", month: 12, vestingPercentage: 25, shares: 25000, cumulativeShares: 50000 },
-      { date: "2025-12-01", month: 24, vestingPercentage: 50, shares: 50000, cumulativeShares: 100000 },
-      { date: "2026-12-01", month: 36, vestingPercentage: 75, shares: 50000, cumulativeShares: 150000 },
-      { date: "2027-12-01", month: 48, vestingPercentage: 100, shares: 50000, cumulativeShares: 200000 }
-    ]
-  }
-];
-
 export default function VestingSchedule({ isDark }: VestingScheduleProps) {
-  const [selectedPartner, setSelectedPartner] = useState<string>("1");
+  const [vestingData, setVestingData] = useState<PartnerVestingData[]>([]);
+  const [dashboardData, setDashboardData] = useState<any>(null);
+
+  // Load data from localStorage (saved from Dashboard)
+  useEffect(() => {
+    try {
+      const savedState = localStorage.getItem("cq_state");
+      if (savedState) {
+        const parsedData = JSON.parse(savedState);
+        setDashboardData(parsedData);
+      }
+    } catch (error) {
+      console.error("Failed to load dashboard data:", error);
+    }
+  }, []);
+
+  // Generate vesting data from dashboard data
+  useEffect(() => {
+    if (dashboardData && dashboardData.partners && dashboardData.partners.length > 0) {
+      const generatedVestingData = dashboardData.partners.map((partner: any) => {
+        const vestingPeriod = dashboardData.companyData?.vestingPeriod || 48;
+        const totalShares = dashboardData.companyData?.totalShares || 1000000;
+        const partnerShares = Math.round((partner.capitalAmount || 0) / Math.max(dashboardData.partners.reduce((sum: number, p: any) => sum + (p.capitalAmount || 0), 1), 1) * totalShares);
+        
+        // Generate vesting schedule
+        const schedule: VestingEntry[] = [];
+        const startDate = new Date();
+        
+        for (let month = 1; month <= vestingPeriod; month++) {
+          const vestingPercentage = (month / vestingPeriod) * 100;
+          const shares = Math.round((partnerShares * month) / vestingPeriod);
+          const cumulativeShares = shares;
+          
+          const date = new Date(startDate);
+          date.setMonth(date.getMonth() + month - 1);
+          
+          schedule.push({
+            date: date.toISOString().split('T')[0],
+            month,
+            vestingPercentage,
+            shares,
+            cumulativeShares
+          });
+        }
+
+        return {
+          partner: {
+            id: partner.id.toString(),
+            name: partner.name,
+            email: partner.email
+          },
+          vestingPeriod,
+          vestingStartDate: startDate.toISOString().split('T')[0],
+          vestingMethod: "Linear",
+          totalShares,
+          partnerShares,
+          capitalEquity: Math.round((partner.capitalAmount || 0) / Math.max(dashboardData.partners.reduce((sum: number, p: any) => sum + (p.capitalAmount || 0), 1), 1) * 100),
+          effortEquity: Math.round(100 / Math.max(dashboardData.partners.length, 1)),
+          totalEquity: Math.round((partner.capitalAmount || 0) / Math.max(dashboardData.partners.reduce((sum: number, p: any) => sum + (p.capitalAmount || 0), 1), 1) * 100) + Math.round(100 / Math.max(dashboardData.partners.length, 1)),
+          effortBreakdown: partner.departments?.map((dept: string) => ({
+            departmentName: dept,
+            departmentWeight: 25, // Default weight
+            taskCount: dashboardData.tasks?.filter((task: any) => task.assignedPartners?.includes(partner.id)).length || 0,
+            totalTaskWeight: dashboardData.tasks?.filter((task: any) => task.assignedPartners?.includes(partner.id)).reduce((sum: number, task: any) => sum + task.weight, 0) || 0,
+            effortContribution: 25, // Default contribution
+            effortPercentage: 25 // Default percentage
+          })) || [],
+          schedule
+        };
+      });
+      
+      setVestingData(generatedVestingData);
+    }
+  }, [dashboardData]);
+
+  // Show empty state if no data
+  if (!dashboardData || !dashboardData.partners || dashboardData.partners.length === 0) {
+    return (
+      <div className={`rounded-2xl border-2 p-6 ${
+        isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+      }`}>
+        <div className="text-center py-8">
+          <div className="text-4xl mb-4">📅</div>
+          <h2 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>No Vesting Data</h2>
+          <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            Add partners in the Dashboard to see vesting schedules here.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const [selectedPartner, setSelectedPartner] = useState<string>("");
   const [viewMode, setViewMode] = useState<"table" | "chart">("table");
 
-  const currentPartner = mockVestingData.find(p => p.partner.id === selectedPartner);
+  // Set first partner as selected when vesting data loads
+  useEffect(() => {
+    if (vestingData.length > 0 && !selectedPartner) {
+      setSelectedPartner(vestingData[0].partner.id);
+    }
+  }, [vestingData, selectedPartner]);
+
+  const currentPartner = vestingData.find(p => p.partner.id === selectedPartner);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -251,7 +177,7 @@ export default function VestingSchedule({ isDark }: VestingScheduleProps) {
                 : 'bg-white border-gray-300 text-gray-900'
             }`}
           >
-            {mockVestingData.map((partner) => (
+            {vestingData.map((partner) => (
               <option key={partner.partner.id} value={partner.partner.id}>
                 {partner.partner.name}
               </option>

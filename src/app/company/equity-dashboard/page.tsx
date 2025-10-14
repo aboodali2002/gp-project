@@ -13,6 +13,14 @@ interface Partner {
   capitalEquity: number;
   effortEquity: number;
   totalEquity: number;
+  capitalAmount?: number;
+}
+
+interface Task {
+  name: string;
+  importance: string;
+  weight: number;
+  equity: number;
 }
 
 interface Department {
@@ -21,12 +29,11 @@ interface Department {
   weight: number;
   totalTaskWeight: number;
   equityPerPoint: number;
-  tasks: Array<{
-    name: string;
-    importance: string;
-    weight: number;
-    equity: number;
-  }>;
+  tasks: Task[];
+}
+
+interface CompanyData {
+  capitalWeight: number;
 }
 
 export default function EquityDashboard() {
@@ -35,7 +42,7 @@ export default function EquityDashboard() {
 
   // Load state from localStorage if present; fallback to mock data
   const saved = typeof window !== 'undefined' ? localStorage.getItem("cq_state") : null;
-  const parsed = saved ? (() => { try { return JSON.parse(saved); } catch { return null; } })() : null;
+  const parsed: { partners: Partner[], departments: Department[], companyData: CompanyData } | null = saved ? (() => { try { return JSON.parse(saved) as { partners: Partner[], departments: Department[], companyData: CompanyData }; } catch { return null; } })() : null;
 
   const partners: Partner[] = parsed?.partners ?? [
     {
@@ -70,7 +77,7 @@ export default function EquityDashboard() {
     }
   ];
 
-  const rawDepartments: any[] = parsed?.departments ?? [
+  const rawDepartments: Department[] = parsed?.departments ?? [
     {
       id: "dept-1",
       name: "Engineering",
@@ -106,9 +113,9 @@ export default function EquityDashboard() {
     }
   ];
 
-  const departments: Department[] = rawDepartments.map((d: any) => {
+  const departments: Department[] = rawDepartments.map((d: Department) => {
     const tasks = Array.isArray(d?.tasks) ? d.tasks : [];
-    const computedTotal = tasks.reduce((sum: number, t: any) => sum + (t?.weight ?? 0), 0);
+    const computedTotal = tasks.reduce((sum: number, t: Task) => sum + (t?.weight ?? 0), 0);
     const totalTaskWeight = typeof d?.totalTaskWeight === 'number' ? d.totalTaskWeight : computedTotal;
     const weight = typeof d?.weight === 'number' ? d.weight : 0;
     const equityPerPoint = typeof d?.equityPerPoint === 'number'
@@ -126,21 +133,20 @@ export default function EquityDashboard() {
 
   // Compute capital equity dynamically if partners contain capitalAmount
   const savedCompany = parsed?.companyData;
-  const capitalWeight = typeof savedCompany?.capitalWeight === 'number' ? savedCompany.capitalWeight : 20;
-  const totalCapitalAmount = partners.reduce((sum, p: any) => sum + (p.capitalAmount || 0), 0);
-  const partnersWithComputedCapital = partners.map((p: any) => {
-    const share = totalCapitalAmount > 0 ? (p.capitalAmount || 0) / totalCapitalAmount : 0;
+  const capitalWeight = savedCompany?.capitalWeight ?? 20;
+  const totalCapitalAmount = partners.reduce((sum, p: Partner) => sum + (p.capitalAmount ?? 0), 0);
+  const partnersWithComputedCapital = partners.map((p: Partner) => {
+    const share = totalCapitalAmount > 0 ? (p.capitalAmount ?? 0) / totalCapitalAmount : 0;
     const computedCapitalEquity = share * capitalWeight;
     return {
       ...p,
-      capitalEquity: typeof p.capitalEquity === 'number' ? p.capitalEquity : computedCapitalEquity,
-      totalEquity: typeof p.totalEquity === 'number' ? p.totalEquity : computedCapitalEquity + (p.effortEquity || 0)
+      capitalEquity: p.capitalEquity ?? computedCapitalEquity,
+      totalEquity: p.totalEquity ?? computedCapitalEquity + (p.effortEquity ?? 0)
     } as Partner;
   });
 
   const totalCapitalEquity = partnersWithComputedCapital.reduce((sum, p) => sum + p.capitalEquity, 0);
   const totalEffortEquity = partnersWithComputedCapital.reduce((sum, p) => sum + (p.effortEquity || 0), 0);
-  const totalEquity = partnersWithComputedCapital.reduce((sum, p) => sum + p.totalEquity, 0);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -183,7 +189,7 @@ export default function EquityDashboard() {
                 ].map((tab) => (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
+                    onClick={() => setActiveTab(tab.id as "overview" | "partners" | "departments" | "vesting")}
                     className={`py-4 px-1 border-b-2 font-medium text-sm ${
                       activeTab === tab.id
                         ? "border-blue-500 text-blue-600"
@@ -286,7 +292,7 @@ export default function EquityDashboard() {
                           <div className="space-y-2">
                             <div className="flex justify-between">
                             <span>Capital Amount:</span>
-                            <span>${(partner as any).capitalAmount?.toFixed?.(2) ?? "0.00"}</span>
+                            <span>${partner.capitalAmount?.toFixed?.(2) ?? "0.00"}</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Capital Equity:</span>
@@ -304,7 +310,7 @@ export default function EquityDashboard() {
                             </div>
                             <div className="flex justify-between">
                               <span>Effort Equity:</span>
-                            <span>{(partner.effortEquity || 0).toFixed(1)}%</span>
+                            <span>{(partner.effortEquity ?? 0).toFixed(1)}%</span>
                             </div>
                           </div>
                         </div>

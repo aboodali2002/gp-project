@@ -4,3 +4,32 @@
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
+
+/* RTL Support */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* Arabic Font Support */
+html[lang="ar"] {
+  font-family: "Segoe UI", "Tahoma", "Arial", sans-serif;
+}
+
+/* RTL Layout Adjustments */
+[dir="rtl"] .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+[dir="rtl"] .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
